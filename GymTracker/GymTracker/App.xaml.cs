@@ -1,4 +1,7 @@
-﻿using Prism;
+﻿using GymTracker.Models;
+using GymTracker.Repositories;
+using GymTracker.Services;
+using Prism;
 using Prism.Ioc;
 using GymTracker.ViewModels;
 using GymTracker.Views;
@@ -31,6 +34,12 @@ namespace GymTracker
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<AddTrainingPage, AddTrainingViewModel>();
+            containerRegistry.RegisterForNavigation<AddStagePage, AddStageViewModel>();
+            containerRegistry.RegisterForNavigation<StagesPage, StagesViewModel>();
+
+            containerRegistry.RegisterSingleton<ITrainingRepository, TrainingRepository>();
+            containerRegistry.RegisterSingleton<IStageRepository, StageRepository>();
         }
     }
 }

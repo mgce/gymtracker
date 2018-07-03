@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:selectors="clr-namespace:GymTracker.Selectors;assembly=GymTracker"
+             x:Class="GymTracker.Views.StagesPage"
+             Title="Stages">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <selectors:StageDataTemplateSelector x:Key="StageDataTemplateSelector"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            <Button Text="Add new stage" Command="{Binding ShowAddingFormCommand}"/>
+            <StackLayout IsVisible="{Binding AddingFormVisible}">
+                <Label Text="Stage Name"/>
+                <Grid HorizontalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80*"></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Entry Grid.Column="0" Text="{Binding NewStageName, Mode=TwoWay}"/>
+                    <Button Grid.Column="1" Text="Add New" Command="{Binding AddStageCommand}"/>
+                </Grid>
+            </StackLayout>
+            <ListView 
+                ItemsSource="{Binding Stages}"
+                ItemTemplate="{StaticResource StageDataTemplateSelector}"
+                >
+                <!--<ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" 
+                                                          Command="{Binding NavigateToCommand}"
+                                                          CommandParameter="StagesPage"/>
+                                </StackLayout.GestureRecognizers>
+                                <Label Text="{Binding Name}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>-->
+            </ListView>
+        </StackLayout>
+        </ContentPage.Content>
+</ContentPage>

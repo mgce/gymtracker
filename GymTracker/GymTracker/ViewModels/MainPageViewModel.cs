@@ -3,17 +3,77 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using GymTracker.Helpers;
+using GymTracker.Models;
+using GymTracker.Repositories;
+using GymTracker.Services;
+using Prism.Services;
 
 namespace GymTracker.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        public MainPageViewModel(INavigationService navigationService) 
+        private readonly IPageDialogService _dialogService;
+        private readonly ITrainingRepository _trainingRepository;
+        public DelegateCommand<Training> GoToStagePageCommand { get; private set; }
+
+        public MainPageViewModel(INavigationService navigationService, 
+            IPageDialogService dialogService, 
+            ITrainingRepository trainingRepository) 
             : base (navigationService)
         {
+            _dialogService = dialogService;
+            _trainingRepository = trainingRepository;
+            Trainings = new ObservableCollection<Training>();
             Title = "Main Page";
+            Task.Run(async () => await GetTrainings());
+            GoToStagePageCommand = new DelegateCommand<Training>(async (t) => await GoToStagePage(t));
+        }
+
+        private ObservableCollection<Training> _trainings;
+        public ObservableCollection<Training> Trainings
+        {
+            get => _trainings;
+            set
+            {
+                _trainings = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private async Task GetTrainings()
+        {
+            await _trainingRepository.GetItemsAsync().ContinueWith(async r =>
+            {
+                var trainings = await r;
+                foreach (var t in trainings)
+                {
+                    Trainings.Add(t);
+                }
+            });
+        }
+
+        private async Task GoToStagePage(Training training)
+        {
+            var navigationParams = new NavigationParameters();
+            navigationParams.Add(Constants.Models.Training, training);
+            await NavigationService.NavigateAsync("StagesPage", navigationParams);
+        }
+
+        public override async void OnNavigatedTo(NavigationParameters parameters)
+        {
+            if (parameters.ContainsKey("newTraining"))
+            {
+                var newTraining = parameters.GetValue<Training>("newTraining");
+                Trainings.Add(newTraining);
+                if (newTraining != null)
+                    await _dialogService.DisplayAlertAsync("New training was added",
+                        $"The training with name {newTraining.Name} was added", "Ok");
+            }
         }
     }
 }

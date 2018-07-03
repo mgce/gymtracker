@@ -1,6 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using GymTracker.Droid.Services;
+using GymTracker.Services;
 using Prism;
 using Prism.Ioc;
 
@@ -15,7 +17,6 @@ namespace GymTracker.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
         }
@@ -26,6 +27,7 @@ namespace GymTracker.Droid
         public void RegisterTypes(IContainerRegistry container)
         {
             // Register any platform specific implementations
+            container.RegisterSingleton<IFileHelper, FileHelper>();
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GymTracker.Views.MainPageItems.MainPageViewCell"
+             x:Name="MainPageCell">
+  <ViewCell.View>
+      <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="Red">
+          <Button HorizontalOptions="FillAndExpand" 
+                  VerticalOptions="FillAndExpand"   
+                  Text="{Binding Name}" 
+                  Command="{Binding ParentBindingContext.GoToStagePageCommand, Source={x:Reference MainPageCell}}" 
+                  CommandParameter="{Binding .}"/>
+      </StackLayout>
+    </ViewCell.View>
+</ViewCell>
