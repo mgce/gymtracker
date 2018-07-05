@@ -11,7 +11,7 @@ namespace GymTracker.Selectors
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
             var mytemplate = new DataTemplate(typeof(StagePageViewCell));
-            mytemplate.SetValue(MainPageViewCell.ParentBindingContextProperty, container.BindingContext);
+            mytemplate.SetValue(StagePageViewCell.ParentBindingContextProperty, container.BindingContext);
 
             return mytemplate;
         }

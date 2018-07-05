@@ -14,7 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\AddExercisePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\AddTrainingPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ExercisesPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\StagesPage.xaml">
@@ -23,9 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\StagePageItems\AddStagePage.xaml.cs">
-      <DependentUpon>AddStagePage.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\StagePageItems\StagePageViewCell.xaml.cs">
       <DependentUpon>StagePageViewCell.xaml</DependentUpon>
     </Compile>

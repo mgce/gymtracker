@@ -4,7 +4,7 @@
              x:Class="GymTracker.Views.MainPageItems.MainPageViewCell"
              x:Name="MainPageCell">
   <ViewCell.View>
-      <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="Red">
+      <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
           <Button HorizontalOptions="FillAndExpand" 
                   VerticalOptions="FillAndExpand"   
                   Text="{Binding Name}" 

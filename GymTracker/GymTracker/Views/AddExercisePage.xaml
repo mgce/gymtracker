@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:GymTracker.Converters;assembly=GymTracker"
+             Title="{Binding Title}"
+             x:Class="GymTracker.Views.AddExercisePage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Exercise Name"/>
+            <Entry Text="{Binding Name}"/>
+
+            <Label Text="Sets"/>
+            <Entry Text="{Binding Sets}"/>
+
+            <Label Text="Use timer?"/>
+            <Switch IsToggled="{Binding UseTimer}" HorizontalOptions="Start"/>
+
+            <Label Text="Repetition" IsVisible="{Binding UseTimer, Converter={converters:InverseBooleanConverter}}"/>
+            <Entry Text="{Binding Repetitions}" IsVisible="{Binding UseTimer, Converter={converters:InverseBooleanConverter}}"/>
+
+            <Label Text="Minimum Time" IsVisible="{Binding UseTimer}"/>
+            <Entry Text="{Binding MinTime}" IsVisible="{Binding UseTimer}"/>
+
+            <Label Text="Maximum Time" IsVisible="{Binding UseTimer}"/>
+            <Entry Text="{Binding MaxTime}" IsVisible="{Binding UseTimer}"/>
+
+            <Button Text="Add new exercise" Command="{Binding AddExerciseCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

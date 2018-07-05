@@ -12,6 +12,8 @@ namespace GymTracker.Helpers
             public static string Training = "Training";
             public static string NewStage = "newStage";
             public static string Stage = "Stage";
+            public static string NewExercise = "newExercise";
+            public static string Exercise = "Exercise";
         }
     }
 }

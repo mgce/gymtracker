@@ -7,6 +7,7 @@ using GymTracker.Helpers;
 using GymTracker.Models;
 using GymTracker.Repositories;
 using GymTracker.Services;
+using GymTracker.Views;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -17,12 +18,14 @@ namespace GymTracker.ViewModels
         private readonly IStageRepository _stageRepository;
         public DelegateCommand ShowAddingFormCommand { get;}
         public DelegateCommand AddStageCommand { get;}
+        public DelegateCommand<Stage> NavigateToExercisesPageCommand { get;}
 
         public StagesViewModel(INavigationService navigationService, IStageRepository stageRepository)
             : base(navigationService)
         {
             _stageRepository = stageRepository;
             ShowAddingFormCommand = new DelegateCommand(async () => await ShowAddingForm());
+            NavigateToExercisesPageCommand = new DelegateCommand<Stage>(async (s) => await NavigateToExercisesPage(s));
             AddStageCommand = new DelegateCommand(async () => await AddStage());
             Stages = new ObservableCollection<Stage>();
         }
@@ -62,7 +65,18 @@ namespace GymTracker.ViewModels
                 var stage = new Stage(NewStageName, Training.Id);
                 await _stageRepository.SaveItemAsync(stage);
                 Stages.Add(stage);
+                AddingFormVisible = false;
+                NewStageName = String.Empty;
             }
+        }
+
+        public async Task NavigateToExercisesPage(Stage stage)
+        {
+            var navigationParams = new NavigationParameters
+            {
+                {Constants.Models.Stage, stage}
+            };
+            await NavigationService.NavigateAsync(nameof(ExercisesPage), navigationParams);
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)

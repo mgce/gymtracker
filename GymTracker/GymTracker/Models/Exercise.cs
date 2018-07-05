@@ -10,6 +10,7 @@ namespace GymTracker.Models
     {
         public string Name { get; set; }
         public int? Repetition { get; set; }
+        public bool Timer { get; set; }
         public int? MinTime { get; set; }
         public int? MaxTime { get; set; }
         public int StageId { get; set; }
@@ -17,6 +18,16 @@ namespace GymTracker.Models
         public Exercise()
         {
             
+        }
+
+        public Exercise(string name, int? repetition, bool timer, int? minTime, int? maxTime, int stageId)
+        {
+            Name = name;
+            Repetition = repetition;
+            Timer = timer;
+            MinTime = minTime;
+            MaxTime = maxTime;
+            StageId = stageId;
         }
     }
 }

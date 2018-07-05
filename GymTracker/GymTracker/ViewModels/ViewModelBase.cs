@@ -12,7 +12,6 @@ namespace GymTracker.ViewModels
     {
         protected INavigationService NavigationService { get; private set; }
         public DelegateCommand<string> NavigateToCommand { get; }
-        public DelegateCommand<string> PushNavigationPopUpCommand { get; }
 
         private string _title;
         public string Title
@@ -25,7 +24,6 @@ namespace GymTracker.ViewModels
         {
             NavigationService = navigationService;
             NavigateToCommand = new DelegateCommand<string>(async (path) => await NavigateTo(path));
-            PushNavigationPopUpCommand = new DelegateCommand<string>(async (path) => await PushNavigationPopUp(path));
         }
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
@@ -49,6 +47,5 @@ namespace GymTracker.ViewModels
         }
 
         public async Task NavigateTo (string path) => await NavigationService.NavigateAsync(path);
-        public async Task PushNavigationPopUp (string path) => await NavigationService.PushPopupPageAsync(path);
     }
 }

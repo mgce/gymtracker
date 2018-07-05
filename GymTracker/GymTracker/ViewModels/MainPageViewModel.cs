@@ -11,6 +11,7 @@ using GymTracker.Helpers;
 using GymTracker.Models;
 using GymTracker.Repositories;
 using GymTracker.Services;
+using GymTracker.Views;
 using Prism.Services;
 
 namespace GymTracker.ViewModels
@@ -19,7 +20,7 @@ namespace GymTracker.ViewModels
     {
         private readonly IPageDialogService _dialogService;
         private readonly ITrainingRepository _trainingRepository;
-        public DelegateCommand<Training> GoToStagePageCommand { get; private set; }
+        public DelegateCommand<Training> GoToStagePageCommand { get; }
 
         public MainPageViewModel(INavigationService navigationService, 
             IPageDialogService dialogService, 
@@ -29,7 +30,7 @@ namespace GymTracker.ViewModels
             _dialogService = dialogService;
             _trainingRepository = trainingRepository;
             Trainings = new ObservableCollection<Training>();
-            Title = "Main Page";
+            Title = "Gym tracker";
             Task.Run(async () => await GetTrainings());
             GoToStagePageCommand = new DelegateCommand<Training>(async (t) => await GoToStagePage(t));
         }
@@ -61,18 +62,15 @@ namespace GymTracker.ViewModels
         {
             var navigationParams = new NavigationParameters();
             navigationParams.Add(Constants.Models.Training, training);
-            await NavigationService.NavigateAsync("StagesPage", navigationParams);
+            await NavigationService.NavigateAsync(nameof(StagesPage), navigationParams);
         }
 
-        public override async void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            if (parameters.ContainsKey("newTraining"))
+            if (parameters.ContainsKey(Constants.Models.NewTraining))
             {
-                var newTraining = parameters.GetValue<Training>("newTraining");
+                var newTraining = parameters.GetValue<Training>(Constants.Models.NewTraining);
                 Trainings.Add(newTraining);
-                if (newTraining != null)
-                    await _dialogService.DisplayAlertAsync("New training was added",
-                        $"The training with name {newTraining.Name} was added", "Ok");
             }
         }
     }

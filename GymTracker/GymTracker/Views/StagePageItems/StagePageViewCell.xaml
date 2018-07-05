@@ -4,11 +4,11 @@
              x:Class="GymTracker.Views.MainPageItems.StagePageViewCell"
              x:Name="StagePageView">
   <ViewCell.View>
-      <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="Red">
+      <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
           <Button HorizontalOptions="FillAndExpand" 
                   VerticalOptions="FillAndExpand"   
                   Text="{Binding Name}" 
-                  Command="{Binding ParentBindingContext.GoToStagePageCommand, Source={x:Reference StagePageView}}" 
+                  Command="{Binding ParentBindingContext.NavigateToExercisesPageCommand, Source={x:Reference StagePageView}}" 
                   CommandParameter="{Binding .}"/>
       </StackLayout>
     </ViewCell.View>
