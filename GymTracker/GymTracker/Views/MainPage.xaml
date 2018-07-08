@@ -11,7 +11,18 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Click Me" Command="{Binding NavigateToCommand}" CommandParameter="AddTrainingPage"/>
+            <Button Text="Add new training" Command="{Binding ShowAddingFormCommand}"/>
+            <StackLayout IsVisible="{Binding AddingFormVisible}">
+                <Label Text="Training Name"/>
+                <Grid HorizontalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80*"></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Entry Grid.Column="0" Text="{Binding Name, Mode=TwoWay}"/>
+                    <Button Grid.Column="1" Text="Add" Command="{Binding AddTrainingCommand}"/>
+                </Grid>
+            </StackLayout>
             <ListView 
                 ItemsSource="{Binding Trainings}"
                 ItemTemplate="{StaticResource DataTemplateSelector}"/>

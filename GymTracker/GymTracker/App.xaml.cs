@@ -38,6 +38,7 @@ namespace GymTracker
             containerRegistry.RegisterForNavigation<ExercisesPage, ExercisesViewModel>();
             containerRegistry.RegisterForNavigation<StagesPage, StagesViewModel>();
             containerRegistry.RegisterForNavigation<AddExercisePage, AddExerciseViewModel>();
+            containerRegistry.RegisterForNavigation<ActiveTrainingPage, ActiveTrainingViewModel>();
 
             containerRegistry.RegisterSingleton<ITrainingRepository, TrainingRepository>();
             containerRegistry.RegisterSingleton<IStageRepository, StageRepository>();

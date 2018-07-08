@@ -83,5 +83,13 @@ namespace GymTracker.ViewModels
             await NavigationService.GoBackAsync(navigationParams);
         }
 
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            if (parameters.ContainsKey(Constants.Models.Stage))
+            {
+                _stageId = parameters.GetValue<Stage>(Constants.Models.Stage).Id;
+            }
+            //TODO Walidacja jezeli nie ma stagea
+        }
     }
 }

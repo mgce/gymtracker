@@ -56,7 +56,7 @@ namespace GymTracker.Services
                         var asJsonProperty = properties.Single(x => x.Name == nameof(Training.StagesAsJson));
                         var stagesAsJson = asJsonProperty.GetValue(item, null);
                         if(stagesAsJson == null)
-                            continue;;
+                            continue;
                         var stagesProperty = properties.Single(x => x.Name == nameof(Training.Stages));
                         var stageList = stagesProperty.GetValue(item, null) as List<Stage>;
                         if (stageList != null)

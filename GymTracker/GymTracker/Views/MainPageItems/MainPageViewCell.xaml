@@ -5,11 +5,20 @@
              x:Name="MainPageCell">
   <ViewCell.View>
       <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-          <Button HorizontalOptions="FillAndExpand" 
-                  VerticalOptions="FillAndExpand"   
-                  Text="{Binding Name}" 
-                  Command="{Binding ParentBindingContext.GoToStagePageCommand, Source={x:Reference MainPageCell}}" 
-                  CommandParameter="{Binding .}"/>
-      </StackLayout>
+            <Label HorizontalOptions="FillAndExpand" 
+                   VerticalOptions="FillAndExpand" 
+                   Text="{Binding Name}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ParentBindingContext.GoToStagePageCommand, Source={x:Reference MainPageCell}}" 
+                                          CommandParameter="{Binding .}"/>
+                </Label.GestureRecognizers>
+            </Label>
+          <Label Text="Start Training">
+              <Label.GestureRecognizers>
+                  <TapGestureRecognizer Command="{Binding ParentBindingContext.StartTrainingCommand, Source={x:Reference MainPageCell}}" 
+                                        CommandParameter="{Binding .}"/>
+              </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
     </ViewCell.View>
 </ViewCell>
