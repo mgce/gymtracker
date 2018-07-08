@@ -30,11 +30,11 @@ namespace GymTracker.ViewModels
             _dialogService = dialogService;
             GoToNextStageCommand = new DelegateCommand(async()=>await GoToNextStage());
             GoToPreviousStageCommand = new DelegateCommand(async()=>await GoToPreviousStage());
-            Exercises = new ObservableCollection<Exercise>();
+            Exercises = new ObservableCollection<ExerciseViewModel>();
         }
 
-        private ObservableCollection<Exercise> _exercises;
-        public ObservableCollection<Exercise> Exercises
+        private ObservableCollection<ExerciseViewModel> _exercises;
+        public ObservableCollection<ExerciseViewModel> Exercises
         {
             get => _exercises;
             set => SetProperty(ref _exercises, value);
@@ -73,13 +73,16 @@ namespace GymTracker.ViewModels
                            if (_stages?.Count == 0)
                            {
                                await _dialogService.DisplayAlertAsync("Empty stages",
-                                   "Sorry, but you not created any stage yet.", "Go Back")
-                                   .ContinueWith((task) => NavigationService.GoBackAsync());
+                                   "Sorry, but you not created any stage yet.", "Go Back");
+                               return;
+                               //await NavigationService.GoBackAsync();
                            }
 
                            CurrentStage = _stages.FirstOrDefault();
                            Index = _stages.IndexOf(CurrentStage);
-                           Exercises.AddRange(await _exerciseRepository.GetByStageId(CurrentStage.Id));
+                           var exercises = await _exerciseRepository.GetByStageId(CurrentStage.Id);
+                           exercises.ForEach(x=>Exercises.Add(new ExerciseViewModel(x)));
+
                        });
             }
         }
@@ -104,8 +107,9 @@ namespace GymTracker.ViewModels
         private async Task SwapStages(int index)
         {
             CurrentStage = _stages[index];
-            Exercises = new ObservableCollection<Exercise>();
-            Exercises.AddRange(await _exerciseRepository.GetByStageId(CurrentStage.Id));
+            Exercises = new ObservableCollection<ExerciseViewModel>();
+            var exervises = await _exerciseRepository.GetByStageId(CurrentStage.Id);
+            exervises.ForEach(x=>Exercises.Add(new ExerciseViewModel(x)));
             Index = index;
         }
     }
