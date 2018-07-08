@@ -13,6 +13,7 @@ using GymTracker.Repositories;
 using GymTracker.Services;
 using GymTracker.Views;
 using Prism.Services;
+using Xamarin.Forms;
 
 namespace GymTracker.ViewModels
 {
@@ -68,21 +69,19 @@ namespace GymTracker.ViewModels
 
         private async Task StartTraining(Training training)
         {
-            var navigationParams = new NavigationParameters();
-            navigationParams.Add(Constants.Models.Training, training);
+            var navigationParams = new NavigationParameters
+            {
+                {Constants.Models.Training, training}
+            };
             await NavigationService.NavigateAsync(nameof(ActiveTrainingPage), navigationParams);
         }
 
         private async Task GetTrainings()
         {
-            await _trainingRepository.GetItemsAsync().ContinueWith(async result =>
-            {
-                var trainings = await result;
-                foreach (var t in trainings)
-                {
-                    Trainings.Add(t);
-                }
-            });
+            var trainings = await _trainingRepository.GetItemsAsync();
+            Device.BeginInvokeOnMainThread(() =>
+                Trainings.AddRange(trainings)
+            );
         }
 
         private async Task AddTraining()
