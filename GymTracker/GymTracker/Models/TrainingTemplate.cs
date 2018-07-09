@@ -5,20 +5,20 @@ using SQLite;
 
 namespace GymTracker.Models
 {
-    [Table("Training")]
-    public class Training : BaseClass
+    [Table("TrainingTemplate")]
+    public class TrainingTemplate : BaseClass
     {
         public string Name { get; set; }
         public string StagesAsJson { get; set; }
 
         [Ignore]
-        public List<Stage> Stages { get; set; }
+        public List<StageTemplate> Stages { get; set; }
 
-        public Training()
+        public TrainingTemplate()
         {
             
         }
-        public Training(string name)
+        public TrainingTemplate(string name)
         {
             Name = name;
         }

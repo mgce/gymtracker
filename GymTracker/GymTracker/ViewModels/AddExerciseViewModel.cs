@@ -87,7 +87,7 @@ namespace GymTracker.ViewModels
         {
             if (parameters.ContainsKey(Constants.Models.Stage))
             {
-                _stageId = parameters.GetValue<Stage>(Constants.Models.Stage).Id;
+                _stageId = parameters.GetValue<StageTemplate>(Constants.Models.Stage).Id;
             }
             //TODO Walidacja jezeli nie ma stagea
         }

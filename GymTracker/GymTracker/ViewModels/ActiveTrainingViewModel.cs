@@ -15,17 +15,17 @@ namespace GymTracker.ViewModels
 {
     public class ActiveTrainingViewModel : ViewModelBase
     {
-        private readonly IStageRepository _stageRepository;
+        private readonly IStageTemplateRepository _stageTemplateRepository;
         private readonly IExerciseTemplateRepository _exerciseTemplateRepository;
         private readonly IPageDialogService _dialogService;
         public DelegateCommand GoToNextStageCommand { get; set; }
         public DelegateCommand GoToPreviousStageCommand { get; set; }
-        private List<Stage> _stages;
+        private List<StageTemplate> _stages;
 
-        public ActiveTrainingViewModel(INavigationService navigationService, IStageRepository stageRepository, IExerciseTemplateRepository exerciseTemplateRepository, IPageDialogService dialogService) 
+        public ActiveTrainingViewModel(INavigationService navigationService, IStageTemplateRepository stageTemplateRepository, IExerciseTemplateRepository exerciseTemplateRepository, IPageDialogService dialogService) 
             : base(navigationService)
         {
-            _stageRepository = stageRepository;
+            _stageTemplateRepository = stageTemplateRepository;
             _exerciseTemplateRepository = exerciseTemplateRepository;
             _dialogService = dialogService;
             GoToNextStageCommand = new DelegateCommand(async()=>await GoToNextStage());
@@ -40,8 +40,8 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _exercises, value);
         }
 
-        private Stage _currentStage;
-        public Stage CurrentStage
+        private StageTemplate _currentStage;
+        public StageTemplate CurrentStage
         {
             get => _currentStage;
             set => SetProperty(ref _currentStage, value);
@@ -54,8 +54,8 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _index, value);
         }
 
-        private Training _training;
-        public Training Training
+        private TrainingTemplate _training;
+        public TrainingTemplate Training
         {
             get => _training;
             set => SetProperty(ref _training, value);
@@ -65,8 +65,8 @@ namespace GymTracker.ViewModels
         {
             if (parameters.ContainsKey(Constants.Models.Training))
             {
-                Training = parameters.GetValue<Training>(Constants.Models.Training);
-                await Task.Run(() => _stageRepository.GetStagesByTrainingId(Training.Id)).ContinueWith(async stages =>
+                Training = parameters.GetValue<TrainingTemplate>(Constants.Models.Training);
+                await Task.Run(() => _stageTemplateRepository.GetStagesByTrainingId(Training.Id)).ContinueWith(async stages =>
                        {
                            _stages = stages.Result;
 

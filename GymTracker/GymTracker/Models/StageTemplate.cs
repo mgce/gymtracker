@@ -5,8 +5,8 @@ using SQLite;
 
 namespace GymTracker.Models
 {
-    [Table("Stage")]
-    public class Stage : BaseClass
+    [Table("StageTemplate")]
+    public class StageTemplate : BaseClass
     {
         public string Name { get; set; }
         public int TrainingId { get; set; }
@@ -14,12 +14,12 @@ namespace GymTracker.Models
         [Ignore]
         public List<ExerciseTemplate> Exercises { get; set; }
 
-        public Stage()
+        public StageTemplate()
         {
             
         }
 
-        public Stage(string name, int trainingId)
+        public StageTemplate(string name, int trainingId)
         {
             Name = name;
             TrainingId = trainingId;

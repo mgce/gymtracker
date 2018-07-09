@@ -5,7 +5,7 @@ using SQLite;
 
 namespace GymTracker.Models
 {
-    [Table("Exercise")]
+    [Table("ExerciseTemplate")]
     public class ExerciseTemplate : BaseClass
     {
         public string Name { get; set; }

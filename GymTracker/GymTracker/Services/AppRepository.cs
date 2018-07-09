@@ -19,28 +19,28 @@ namespace GymTracker.Services
             _database = new SQLiteAsyncConnection(dbPath);
             Task.Run((() =>
             {
-                _database.DropTableAsync<Training>();
-                _database.CreateTableAsync<Training>();
-                _database.CreateTableAsync<Stage>();
+                _database.DropTableAsync<TrainingTemplate>();
+                _database.CreateTableAsync<TrainingTemplate>();
+                _database.CreateTableAsync<StageTemplate>();
                 _database.CreateTableAsync<ExerciseTemplate>();
             })).Wait();
 
         }
 
-        public async Task<List<Training>> GetTrainingsAsync()
+        public async Task<List<TrainingTemplate>> GetTrainingsAsync()
         {
-            var trainings = await _database.Table<Training>().ToListAsync();
+            var trainings = await _database.Table<TrainingTemplate>().ToListAsync();
             foreach (var training in trainings)
             {
-                training.Stages = JsonConvert.DeserializeObject<List<Stage>>(training.StagesAsJson);
+                training.Stages = JsonConvert.DeserializeObject<List<StageTemplate>>(training.StagesAsJson);
             }
 
             return trainings;
         }
 
-        public async Task<List<Stage>> GetStagesAsync()
+        public async Task<List<StageTemplate>> GetStagesAsync()
         {
-            var stages = await _database.Table<Stage>().ToListAsync();
+            var stages = await _database.Table<StageTemplate>().ToListAsync();
             foreach (var stage in stages)
             {
                 stage.Exercises = JsonConvert.DeserializeObject<List<ExerciseTemplate>>(stage.ExercisesAsJson);

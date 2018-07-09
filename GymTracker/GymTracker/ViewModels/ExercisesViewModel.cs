@@ -32,8 +32,8 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _exercises, value);
         }
 
-        private Stage _stages;
-        public Stage Stage
+        private StageTemplate _stages;
+        public StageTemplate Stage
         {
             get => _stages;
             set => SetProperty(ref _stages, value);
@@ -56,7 +56,7 @@ namespace GymTracker.ViewModels
         {
             if (parameters.ContainsKey(Constants.Models.Stage))
             {
-                Stage = parameters.GetValue<Stage>(Constants.Models.Stage);
+                Stage = parameters.GetValue<StageTemplate>(Constants.Models.Stage);
                 Title = $"{Stage.Name} exercises";
             }
 

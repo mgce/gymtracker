@@ -15,19 +15,19 @@ namespace GymTracker.ViewModels
 {
     public class StagesViewModel : ViewModelBase
     {
-        private readonly IStageRepository _stageRepository;
+        private readonly IStageTemplateRepository _stageTemplateRepository;
         public DelegateCommand ShowAddingFormCommand { get;}
         public DelegateCommand AddStageCommand { get;}
-        public DelegateCommand<Stage> NavigateToExercisesPageCommand { get;}
+        public DelegateCommand<StageTemplate> NavigateToExercisesPageCommand { get;}
 
-        public StagesViewModel(INavigationService navigationService, IStageRepository stageRepository)
+        public StagesViewModel(INavigationService navigationService, IStageTemplateRepository stageTemplateRepository)
             : base(navigationService)
         {
-            _stageRepository = stageRepository;
+            _stageTemplateRepository = stageTemplateRepository;
             ShowAddingFormCommand = new DelegateCommand(async () => await ShowAddingForm());
-            NavigateToExercisesPageCommand = new DelegateCommand<Stage>(async (s) => await NavigateToExercisesPage(s));
+            NavigateToExercisesPageCommand = new DelegateCommand<StageTemplate>(async (s) => await NavigateToExercisesPage(s));
             AddStageCommand = new DelegateCommand(async () => await AddStage());
-            Stages = new ObservableCollection<Stage>();
+            Stages = new ObservableCollection<StageTemplate>();
         }
 
         private bool _addingFormVisible;
@@ -44,15 +44,15 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _newStageName, value);
         }
 
-        private Training _training;
-        public Training Training
+        private TrainingTemplate _training;
+        public TrainingTemplate Training
         {
             get => _training;
             set => SetProperty(ref _training, value);
         }
 
-        private ObservableCollection<Stage> _stages;
-        public ObservableCollection<Stage> Stages
+        private ObservableCollection<StageTemplate> _stages;
+        public ObservableCollection<StageTemplate> Stages
         {
             get => _stages;
             set => SetProperty(ref _stages, value);
@@ -62,15 +62,15 @@ namespace GymTracker.ViewModels
         {
             if (!string.IsNullOrEmpty(NewStageName))
             {
-                var stage = new Stage(NewStageName, Training.Id);
-                await _stageRepository.SaveItemAsync(stage);
+                var stage = new StageTemplate(NewStageName, Training.Id);
+                await _stageTemplateRepository.SaveItemAsync(stage);
                 Stages.Add(stage);
                 AddingFormVisible = false;
                 NewStageName = String.Empty;
             }
         }
 
-        public async Task NavigateToExercisesPage(Stage stage)
+        public async Task NavigateToExercisesPage(StageTemplate stage)
         {
             var navigationParams = new NavigationParameters
             {
@@ -83,15 +83,15 @@ namespace GymTracker.ViewModels
         {
             if (parameters.ContainsKey(Constants.Models.Training))
             {
-                Training = parameters.GetValue<Training>(Constants.Models.Training);
-                var stages = await _stageRepository.GetStagesByTrainingId(Training.Id);
+                Training = parameters.GetValue<TrainingTemplate>(Constants.Models.Training);
+                var stages = await _stageTemplateRepository.GetStagesByTrainingId(Training.Id);
                 if(stages != null)
                     Stages.AddRange(stages);
             }
 
             if (parameters.ContainsKey(Constants.Models.NewStage))
             {
-                Stages.AddRange(await _stageRepository.GetStagesByTrainingId(Training.Id));
+                Stages.AddRange(await _stageTemplateRepository.GetStagesByTrainingId(Training.Id));
             }
         }
 

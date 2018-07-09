@@ -20,26 +20,26 @@ namespace GymTracker.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         private readonly IPageDialogService _dialogService;
-        private readonly ITrainingRepository _trainingRepository;
+        private readonly ITrainingTemplateRepository _trainingTemplateRepository;
         public DelegateCommand ShowAddingFormCommand { get; }
-        public DelegateCommand<Training> GoToStagePageCommand { get; }
+        public DelegateCommand<TrainingTemplate> GoToStagePageCommand { get; }
         public DelegateCommand AddTrainingCommand { get; }
-        public DelegateCommand<Training> StartTrainingCommand { get; }
+        public DelegateCommand<TrainingTemplate> StartTrainingCommand { get; }
 
         public MainPageViewModel(INavigationService navigationService, 
             IPageDialogService dialogService, 
-            ITrainingRepository trainingRepository) 
+            ITrainingTemplateRepository trainingTemplateRepository) 
             : base (navigationService)
         {
             _dialogService = dialogService;
-            _trainingRepository = trainingRepository;
-            Trainings = new ObservableCollection<Training>();
+            _trainingTemplateRepository = trainingTemplateRepository;
+            Trainings = new ObservableCollection<TrainingTemplate>();
             Title = "Gym tracker";
             Task.Run(async () => await GetTrainings());
             ShowAddingFormCommand = new DelegateCommand(async () => await ShowAddingForm());
-            GoToStagePageCommand = new DelegateCommand<Training>(async (t) => await GoToStagePage(t));
+            GoToStagePageCommand = new DelegateCommand<TrainingTemplate>(async (t) => await GoToStagePage(t));
             AddTrainingCommand = new DelegateCommand(async () => await AddTraining());
-            StartTrainingCommand = new DelegateCommand<Training>(async (t) => await StartTraining(t));
+            StartTrainingCommand = new DelegateCommand<TrainingTemplate>(async (t) => await StartTraining(t));
         }
 
         private string _name;
@@ -49,8 +49,8 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _name, value);
         }
 
-        private ObservableCollection<Training> _trainings;
-        public ObservableCollection<Training> Trainings
+        private ObservableCollection<TrainingTemplate> _trainings;
+        public ObservableCollection<TrainingTemplate> Trainings
         {
             get => _trainings;
             set
@@ -67,7 +67,7 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _addingFormVisible, value);
         }
 
-        private async Task StartTraining(Training training)
+        private async Task StartTraining(TrainingTemplate training)
         {
             var navigationParams = new NavigationParameters
             {
@@ -78,7 +78,7 @@ namespace GymTracker.ViewModels
 
         private async Task GetTrainings()
         {
-            var trainings = await _trainingRepository.GetItemsAsync();
+            var trainings = await _trainingTemplateRepository.GetItemsAsync();
             Device.BeginInvokeOnMainThread(() =>
                 Trainings.AddRange(trainings)
             );
@@ -88,8 +88,8 @@ namespace GymTracker.ViewModels
         {
             try
             {
-                var training = new Training(Name);
-                await _trainingRepository.SaveItemAsync(training);
+                var training = new TrainingTemplate(Name);
+                await _trainingTemplateRepository.SaveItemAsync(training);
                 Trainings.Add(training);
                 AddingFormVisible = false;
             }
@@ -99,7 +99,7 @@ namespace GymTracker.ViewModels
             }
         }
 
-        private async Task GoToStagePage(Training training)
+        private async Task GoToStagePage(TrainingTemplate training)
         {
             var navigationParams = new NavigationParameters();
             navigationParams.Add(Constants.Models.Training, training);
@@ -110,7 +110,7 @@ namespace GymTracker.ViewModels
         {
             if (parameters.ContainsKey(Constants.Models.NewTraining))
             {
-                var newTraining = parameters.GetValue<Training>(Constants.Models.NewTraining);
+                var newTraining = parameters.GetValue<TrainingTemplate>(Constants.Models.NewTraining);
                 Trainings.Add(newTraining);
             }
         }

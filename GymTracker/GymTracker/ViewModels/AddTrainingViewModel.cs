@@ -12,13 +12,13 @@ namespace GymTracker.ViewModels
 {
     public class AddTrainingViewModel : ViewModelBase
     {
-        private readonly ITrainingRepository _trainingRepository;
+        private readonly ITrainingTemplateRepository _trainingTemplateRepository;
         public DelegateCommand AddTrainingCommand { get;}
 
-        public AddTrainingViewModel(INavigationService navigationService, ITrainingRepository trainingRepository) 
+        public AddTrainingViewModel(INavigationService navigationService, ITrainingTemplateRepository trainingTemplateRepository) 
             : base(navigationService)
         {
-            _trainingRepository = trainingRepository;
+            _trainingTemplateRepository = trainingTemplateRepository;
             AddTrainingCommand = new DelegateCommand(async () => await AddTraining());
         }
 
@@ -33,8 +33,8 @@ namespace GymTracker.ViewModels
         {
             try
             {
-                var training = new Training(Name);
-                await _trainingRepository.SaveItemAsync(training);
+                var training = new TrainingTemplate(Name);
+                await _trainingTemplateRepository.SaveItemAsync(training);
                 var backParams = new NavigationParameters {
                 {
                     "newTraining", training

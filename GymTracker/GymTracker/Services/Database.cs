@@ -29,8 +29,8 @@ namespace GymTracker.Services
             Task.Run((() =>
             {
                 //_database.DropTableAsync<Training>();
-                _database.CreateTableAsync<Training>();
-                _database.CreateTableAsync<Stage>();
+                _database.CreateTableAsync<TrainingTemplate>();
+                _database.CreateTableAsync<StageTemplate>();
                 _database.CreateTableAsync<ExerciseTemplate>();
             })).Wait();
 
@@ -46,21 +46,21 @@ namespace GymTracker.Services
         private async Task<List<T>> LoadChildren(List<T> objectList)
         {
             var type = typeof(T);
-            if (type == typeof(Training))
+            if (type == typeof(TrainingTemplate))
             {
                 foreach (var item in objectList)
                 {
                     try
                     {
                         var properties = item.GetType().GetProperties();
-                        var asJsonProperty = properties.Single(x => x.Name == nameof(Training.StagesAsJson));
+                        var asJsonProperty = properties.Single(x => x.Name == nameof(TrainingTemplate.StagesAsJson));
                         var stagesAsJson = asJsonProperty.GetValue(item, null);
                         if(stagesAsJson == null)
                             continue;
-                        var stagesProperty = properties.Single(x => x.Name == nameof(Training.Stages));
-                        var stageList = stagesProperty.GetValue(item, null) as List<Stage>;
+                        var stagesProperty = properties.Single(x => x.Name == nameof(TrainingTemplate.Stages));
+                        var stageList = stagesProperty.GetValue(item, null) as List<StageTemplate>;
                         if (stageList != null)
-                            stageList = JsonConvert.DeserializeObject<List<Stage>>(stagesAsJson as string);
+                            stageList = JsonConvert.DeserializeObject<List<StageTemplate>>(stagesAsJson as string);
                     }
                     catch (Exception e)
                     {
@@ -77,7 +77,7 @@ namespace GymTracker.Services
 
         private async Task<List<T>> LoadTrainingChildrent(List<T> objectList)
         {
-            var trainings = objectList as List<Training>;
+            var trainings = objectList as List<TrainingTemplate>;
 
             if (trainings == null || trainings.Count == 0)
                 return await Task.FromResult(objectList);
@@ -85,7 +85,7 @@ namespace GymTracker.Services
             foreach (var training in trainings)
             {
                 if(training.StagesAsJson != null)
-                    training.Stages = JsonConvert.DeserializeObject<List<Stage>>(training.StagesAsJson);
+                    training.Stages = JsonConvert.DeserializeObject<List<StageTemplate>>(training.StagesAsJson);
             }
 
             var list = trainings as List<T>;
