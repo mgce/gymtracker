@@ -6,8 +6,8 @@
     <ContentPage.Content>
         <Grid HorizontalOptions="FillAndExpand">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="90*"/>
             </Grid.RowDefinitions>
 
             <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
@@ -32,14 +32,25 @@
                 </Grid>
             </StackLayout>
             <ListView 
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand"
                 Grid.Row="1"
                 ItemsSource="{Binding Exercises}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout>
-                                <Label Text="{Binding Name}"/>
-                            </StackLayout>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="#"/>
+                                <Label Text="Previous"/>
+                                <Label Text="Reps"/>
+                                <Label Text="Done"/>
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

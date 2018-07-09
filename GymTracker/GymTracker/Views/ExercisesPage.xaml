@@ -5,7 +5,7 @@
              x:Class="GymTracker.Views.ExercisesPage">
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Add new Exercise" Command="{Binding NavigateToCommand}" CommandParameter="AddExercisePage"/>
+            <Button Text="Add new Exercise" Command="{Binding AddNewExerciseCommand}"/>
             <ListView ItemsSource="{Binding Exercises}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
