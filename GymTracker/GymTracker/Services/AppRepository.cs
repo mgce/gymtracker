@@ -22,7 +22,7 @@ namespace GymTracker.Services
                 _database.DropTableAsync<Training>();
                 _database.CreateTableAsync<Training>();
                 _database.CreateTableAsync<Stage>();
-                _database.CreateTableAsync<Exercise>();
+                _database.CreateTableAsync<ExerciseTemplate>();
             })).Wait();
 
         }
@@ -43,15 +43,15 @@ namespace GymTracker.Services
             var stages = await _database.Table<Stage>().ToListAsync();
             foreach (var stage in stages)
             {
-                stage.Exercises = JsonConvert.DeserializeObject<List<Exercise>>(stage.ExercisesAsJson);
+                stage.Exercises = JsonConvert.DeserializeObject<List<ExerciseTemplate>>(stage.ExercisesAsJson);
             }
 
             return stages;
         }
 
-        public Task<List<Exercise>> GetExercisesAsync()
+        public Task<List<ExerciseTemplate>> GetExercisesAsync()
         {
-            return _database.Table<Exercise>().ToListAsync();
+            return _database.Table<ExerciseTemplate>().ToListAsync();
         }
 
         //public Task<Training> GetTrainingAsync(int id)

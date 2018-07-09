@@ -14,19 +14,19 @@ namespace GymTracker.ViewModels
 {
     public class ExercisesViewModel : ViewModelBase
     {
-        private readonly IExerciseRepository _exerciseRepository;
+        private readonly IExerciseTemplateRepository _exerciseTemplateRepository;
         public DelegateCommand AddNewExerciseCommand { get; }
 
-        public ExercisesViewModel(INavigationService navigationService, IExerciseRepository exerciseRepository) 
+        public ExercisesViewModel(INavigationService navigationService, IExerciseTemplateRepository exerciseTemplateRepository) 
             : base(navigationService)
         {
-            _exerciseRepository = exerciseRepository;
-            Exercises = new ObservableCollection<Exercise>();
+            _exerciseTemplateRepository = exerciseTemplateRepository;
+            Exercises = new ObservableCollection<ExerciseTemplate>();
             AddNewExerciseCommand = new DelegateCommand(async ()=>await  AddNewExercise());
         }
 
-        private ObservableCollection<Exercise> _exercises;
-        public ObservableCollection<Exercise> Exercises
+        private ObservableCollection<ExerciseTemplate> _exercises;
+        public ObservableCollection<ExerciseTemplate> Exercises
         {
             get => _exercises;
             set => SetProperty(ref _exercises, value);
@@ -41,7 +41,7 @@ namespace GymTracker.ViewModels
 
         private async Task LoadExercises()
         {
-            var exercises = await _exerciseRepository.GetByStageId(Stage.Id);
+            var exercises = await _exerciseTemplateRepository.GetByStageId(Stage.Id);
             Exercises.AddRange(exercises);
         }
 
@@ -62,7 +62,7 @@ namespace GymTracker.ViewModels
 
             if (parameters.ContainsKey(Constants.Models.NewExercise))
             {
-                var exercise = parameters.GetValue<Exercise>(Constants.Models.NewExercise);
+                var exercise = parameters.GetValue<ExerciseTemplate>(Constants.Models.NewExercise);
                 Exercises.Add(exercise);
             }
 

@@ -6,7 +6,7 @@ using SQLite;
 namespace GymTracker.Models
 {
     [Table("Exercise")]
-    public class Exercise : BaseClass
+    public class ExerciseTemplate : BaseClass
     {
         public string Name { get; set; }
         public int? Repetition { get; set; }
@@ -15,12 +15,12 @@ namespace GymTracker.Models
         public int? MaxTime { get; set; }
         public int StageId { get; set; }
 
-        public Exercise()
+        public ExerciseTemplate()
         {
             
         }
 
-        public Exercise(string name, int? repetition, bool timer, int? minTime, int? maxTime, int stageId)
+        public ExerciseTemplate(string name, int? repetition, bool timer, int? minTime, int? maxTime, int stageId)
         {
             Name = name;
             Repetition = repetition;

@@ -16,17 +16,17 @@ namespace GymTracker.ViewModels
     public class ActiveTrainingViewModel : ViewModelBase
     {
         private readonly IStageRepository _stageRepository;
-        private readonly IExerciseRepository _exerciseRepository;
+        private readonly IExerciseTemplateRepository _exerciseTemplateRepository;
         private readonly IPageDialogService _dialogService;
         public DelegateCommand GoToNextStageCommand { get; set; }
         public DelegateCommand GoToPreviousStageCommand { get; set; }
         private List<Stage> _stages;
 
-        public ActiveTrainingViewModel(INavigationService navigationService, IStageRepository stageRepository, IExerciseRepository exerciseRepository, IPageDialogService dialogService) 
+        public ActiveTrainingViewModel(INavigationService navigationService, IStageRepository stageRepository, IExerciseTemplateRepository exerciseTemplateRepository, IPageDialogService dialogService) 
             : base(navigationService)
         {
             _stageRepository = stageRepository;
-            _exerciseRepository = exerciseRepository;
+            _exerciseTemplateRepository = exerciseTemplateRepository;
             _dialogService = dialogService;
             GoToNextStageCommand = new DelegateCommand(async()=>await GoToNextStage());
             GoToPreviousStageCommand = new DelegateCommand(async()=>await GoToPreviousStage());
@@ -80,7 +80,7 @@ namespace GymTracker.ViewModels
 
                            CurrentStage = _stages.FirstOrDefault();
                            Index = _stages.IndexOf(CurrentStage);
-                           var exercises = await _exerciseRepository.GetByStageId(CurrentStage.Id);
+                           var exercises = await _exerciseTemplateRepository.GetByStageId(CurrentStage.Id);
                            exercises.ForEach(x=>Exercises.Add(new ExerciseViewModel(x)));
 
                        });
@@ -108,7 +108,7 @@ namespace GymTracker.ViewModels
         {
             CurrentStage = _stages[index];
             Exercises = new ObservableCollection<ExerciseViewModel>();
-            var exervises = await _exerciseRepository.GetByStageId(CurrentStage.Id);
+            var exervises = await _exerciseTemplateRepository.GetByStageId(CurrentStage.Id);
             exervises.ForEach(x=>Exercises.Add(new ExerciseViewModel(x)));
             Index = index;
         }

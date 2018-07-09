@@ -9,7 +9,7 @@ namespace GymTracker.Services
     public interface IActiveTrainingService
     {
         Task Initialize(int trainingId);
-        Task<Exercise> GetExerciseForCurrentStage();
+        Task<ExerciseTemplate> GetExerciseForCurrentStage();
     }
 
 
@@ -26,7 +26,7 @@ namespace GymTracker.Services
             throw new NotImplementedException();
         }
 
-        public Task<Exercise> GetExerciseForCurrentStage()
+        public Task<ExerciseTemplate> GetExerciseForCurrentStage()
         {
             throw new NotImplementedException();
         }

@@ -31,7 +31,7 @@ namespace GymTracker.Services
                 //_database.DropTableAsync<Training>();
                 _database.CreateTableAsync<Training>();
                 _database.CreateTableAsync<Stage>();
-                _database.CreateTableAsync<Exercise>();
+                _database.CreateTableAsync<ExerciseTemplate>();
             })).Wait();
 
         }

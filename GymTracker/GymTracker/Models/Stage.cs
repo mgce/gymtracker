@@ -12,7 +12,7 @@ namespace GymTracker.Models
         public int TrainingId { get; set; }
         public string ExercisesAsJson { get; set; }
         [Ignore]
-        public List<Exercise> Exercises { get; set; }
+        public List<ExerciseTemplate> Exercises { get; set; }
 
         public Stage()
         {
