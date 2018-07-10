@@ -41,7 +41,7 @@ namespace GymTracker.ViewModels
 
         private async Task LoadExercises()
         {
-            var exercises = await _exerciseTemplateRepository.GetByStageId(Stage.Id);
+            var exercises = await _exerciseTemplateRepository.GetByStageTemplateId(Stage.Id);
             Exercises.AddRange(exercises);
         }
 
@@ -65,8 +65,6 @@ namespace GymTracker.ViewModels
                 var exercise = parameters.GetValue<ExerciseTemplate>(Constants.Models.NewExercise);
                 Exercises.Add(exercise);
             }
-
-            await LoadExercises();
         }
     }
 }

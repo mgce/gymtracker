@@ -10,9 +10,9 @@ namespace GymTracker.ViewModels
     {
         private ExerciseTemplate _exerciseTemplate;
 
-        public ExerciseViewModel(ExerciseTemplate exerciseTemplate)
+        public ExerciseViewModel(Exercise exercise)
         {
-            _exerciseTemplate = exerciseTemplate;
+            _exerciseTemplate = exercise.Template;
         }
 
         private string _name;

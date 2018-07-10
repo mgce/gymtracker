@@ -24,7 +24,7 @@ namespace GymTracker.Services
 
         public Database(IFileHelper fileHelper)
         {
-            var dbPath = fileHelper.GetLocalFilePath("GymTracker.db3");
+            var dbPath = fileHelper.GetLocalFilePath("GymTracker2.db3");
             _database = new SQLiteAsyncConnection(dbPath);
             Task.Run((() =>
             {
@@ -32,6 +32,9 @@ namespace GymTracker.Services
                 _database.CreateTableAsync<TrainingTemplate>();
                 _database.CreateTableAsync<StageTemplate>();
                 _database.CreateTableAsync<ExerciseTemplate>();
+                _database.CreateTableAsync<Training>();
+                _database.CreateTableAsync<Stage>();
+                _database.CreateTableAsync<Exercise>();
             })).Wait();
 
         }

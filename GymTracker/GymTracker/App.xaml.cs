@@ -43,6 +43,9 @@ namespace GymTracker
             containerRegistry.RegisterSingleton<ITrainingTemplateRepository, TrainingTemplateTemplateRepository>();
             containerRegistry.RegisterSingleton<IStageTemplateRepository, StageTemplateTemplateRepository>();
             containerRegistry.RegisterSingleton<IExerciseTemplateRepository, ExerciseTemplateTemplateRepository>();
+            containerRegistry.RegisterSingleton<ITrainingRepository, TrainingRepository>();
+            containerRegistry.RegisterSingleton<IStageRepository, StageRepository>();
+            containerRegistry.RegisterSingleton<IExerciseRepository, ExerciseRepository>();
         }
     }
 }
