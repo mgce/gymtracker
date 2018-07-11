@@ -7,6 +7,8 @@ namespace GymTracker.Models
     {
         public ExerciseViewModel ExerciseViewModel { get; set; }
 
+        public ObservableCollection<SetsViewModel> Items => this;
+
         public GrouppedSets(ExerciseViewModel exerciseViewModel)
         {
             ExerciseViewModel = exerciseViewModel;

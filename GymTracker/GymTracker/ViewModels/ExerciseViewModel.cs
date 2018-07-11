@@ -9,10 +9,12 @@ namespace GymTracker.ViewModels
     public class ExerciseViewModel : BindableBase
     {
         private ExerciseTemplate _exerciseTemplate;
+        public int ExerciseId { get; }
 
         public ExerciseViewModel(Exercise exercise)
         {
             _exerciseTemplate = exercise.Template;
+            ExerciseId = exercise.Id;
         }
 
         private string _name;
@@ -26,6 +28,13 @@ namespace GymTracker.ViewModels
         {
             get => _exerciseTemplate.Repetition;
             set => SetProperty(ref _repetition, value);
+        }
+
+        private int _sets;
+        public int Sets
+        {
+            get => _exerciseTemplate.Sets;
+            set => SetProperty(ref _sets, value);
         }
 
         private bool _timer;

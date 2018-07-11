@@ -9,7 +9,7 @@ namespace GymTracker.Models
     public class StageTemplate : BaseClass
     {
         public string Name { get; set; }
-        public int TrainingId { get; set; }
+        public int TrainingTemplateId { get; set; }
         public string ExercisesAsJson { get; set; }
         [Ignore]
         public List<ExerciseTemplate> Exercises { get; set; }
@@ -19,10 +19,10 @@ namespace GymTracker.Models
             
         }
 
-        public StageTemplate(string name, int trainingId)
+        public StageTemplate(string name, int trainingTemplateId)
         {
             Name = name;
-            TrainingId = trainingId;
+            TrainingTemplateId = trainingTemplateId;
         }
     }
 }

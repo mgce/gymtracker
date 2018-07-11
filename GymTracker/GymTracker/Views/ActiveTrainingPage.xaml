@@ -35,7 +35,9 @@
                 VerticalOptions="FillAndExpand"
                 HorizontalOptions="FillAndExpand"
                 Grid.Row="1"
-                ItemsSource="{Binding Exercises}">
+                ItemsSource="{Binding GrouppedSets}"
+                GroupDisplayBinding="{Binding ExerciseViewModel.Name}"
+                IsGroupingEnabled="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

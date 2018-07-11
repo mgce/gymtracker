@@ -33,9 +33,9 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _name, value);
         }
 
-        private int? _sets;
+        private int _sets;
 
-        public int? Sets
+        public int Sets
         {
             get => _sets;
             set => SetProperty(ref _sets, value);
@@ -74,7 +74,7 @@ namespace GymTracker.ViewModels
 
         private async Task AddExercise()
         {
-            var exercise = new ExerciseTemplate(Name, Repetitions, UseTimer, MinTime, MaxTime, _stageId);
+            var exercise = new ExerciseTemplate(Name, Repetitions, Sets, UseTimer, MinTime, MaxTime, _stageId);
             await _exerciseTemplateRepository.SaveItemAsync(exercise);
             var navigationParams = new NavigationParameters
             {

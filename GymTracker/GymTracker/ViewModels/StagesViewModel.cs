@@ -84,14 +84,14 @@ namespace GymTracker.ViewModels
             if (parameters.ContainsKey(Constants.Models.Training))
             {
                 Training = parameters.GetValue<TrainingTemplate>(Constants.Models.Training);
-                var stages = await _stageTemplateRepository.GetStagesByTrainingId(Training.Id);
+                var stages = await _stageTemplateRepository.GetStagesByTrainingTemplateId(Training.Id);
                 if(stages != null)
                     Stages.AddRange(stages);
             }
 
             if (parameters.ContainsKey(Constants.Models.NewStage))
             {
-                Stages.AddRange(await _stageTemplateRepository.GetStagesByTrainingId(Training.Id));
+                Stages.AddRange(await _stageTemplateRepository.GetStagesByTrainingTemplateId(Training.Id));
             }
         }
 

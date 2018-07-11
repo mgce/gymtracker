@@ -52,7 +52,7 @@ namespace GymTracker.ViewModels
             await NavigationService.NavigateAsync(nameof(AddExercisePage), navigationParams);
         }
 
-        public override async void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
             if (parameters.ContainsKey(Constants.Models.Stage))
             {

@@ -25,10 +25,6 @@ namespace GymTracker.Models
             Sets = new List<Set>();
             Template = tempalate;
             ExerciseTemplateId = tempalate.Id;
-            for (var i = 0; i < tempalate.Repetition; i++)
-            {
-                Sets.Add(new Set(Id));
-            }
         }
     }
 }

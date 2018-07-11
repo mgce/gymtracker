@@ -20,6 +20,7 @@ namespace GymTracker.ViewModels
         private readonly ITrainingRepository _trainingRepository;
         private readonly IStageRepository _stageRepository;
         private readonly IExerciseRepository _exerciseRepository;
+        private readonly ISetRepository _setRepository;
         private readonly IPageDialogService _dialogService;
         public DelegateCommand GoToNextStageCommand { get; set; }
         public DelegateCommand GoToPreviousStageCommand { get; set; }
@@ -32,6 +33,7 @@ namespace GymTracker.ViewModels
             ITrainingRepository trainingRepository,
             IStageRepository stageRepository,
             IExerciseRepository exerciseRepository,
+            ISetRepository setRepository,
             IPageDialogService dialogService) 
             : base(navigationService)
         {
@@ -40,6 +42,7 @@ namespace GymTracker.ViewModels
             _trainingRepository = trainingRepository;
             _stageRepository = stageRepository;
             _exerciseRepository = exerciseRepository;
+            _setRepository = setRepository;
             _dialogService = dialogService;
             _stages = new List<Stage>();
             GoToNextStageCommand = new DelegateCommand(async()=>await GoToNextStage());
@@ -61,11 +64,11 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _currentStage, value);
         }
 
-        private int _index;
-        public int Index
+        private int _indexOfCurrentStage;
+        public int IndexOfCurrentStage
         {
-            get => _index;
-            set => SetProperty(ref _index, value);
+            get => _indexOfCurrentStage;
+            set => SetProperty(ref _indexOfCurrentStage, value);
         }
 
         private Training _training;
@@ -80,36 +83,64 @@ namespace GymTracker.ViewModels
             if (parameters.ContainsKey(Constants.Models.Training))
             {
                 var trainingTemplate = parameters.GetValue<TrainingTemplate>(Constants.Models.Training);
-                await CreateTrainingFromTemplate(trainingTemplate);
 
-                await Task.Run(() => _stageTemplateRepository.GetStagesByTrainingId(Training.Id)).ContinueWith(async stages =>
-                       {
-                           _stageTemplates = stages.Result;
-                           
-                           if (_stageTemplates?.Count == 0)
-                           {
-                               await _dialogService.DisplayAlertAsync("Empty stages",
-                                   "Sorry, but you not created any stage yet.", "Go Back");
-                               return Task.CompletedTask;
-                               //await NavigationService.GoBackAsync();
-                           }
-
-                           var firstStageTemplateId = _stageTemplates.First().Id;
-
-                           await CreateStagesFromTemplate(_stageTemplates, Training.Id);
-                           CurrentStage = _stageTemplates.FirstOrDefault();
-                           Index = _stageTemplates.IndexOf(CurrentStage);
-
-                           var exerciseTemplate = await
-                               _exerciseTemplateRepository.GetByStageTemplateId(firstStageTemplateId);
-                           var exercises = await CreateExercisesFromTemplate(exerciseTemplate, firstStageTemplateId);
-                           var exerciseViewModel = CreateExerciseViewModelsFromExercises(exercises);
-                           CreateGrouppedSetsFromExerciseViewModels(exerciseViewModel);
-
-                           return Task.CompletedTask;
-                       });
+                var activeTraining = await _trainingRepository.GetActiveTrainingByTemplateId(trainingTemplate.Id);
+                if (activeTraining == null)
+                    await CreateNewTraining(trainingTemplate);
+                else
+                {
+                    await LoadActiveTraining(activeTraining, trainingTemplate);
+                }
             }
         }
+
+        private async Task CreateNewTraining(TrainingTemplate trainingTemplate)
+        {
+            await CreateTrainingFromTemplate(trainingTemplate);
+            await Task.Run(() => _stageTemplateRepository.GetStagesByTrainingTemplateId(trainingTemplate.Id)).ContinueWith(async stages =>
+            {
+                _stageTemplates = stages.Result;
+
+                if (_stageTemplates?.Count == 0)
+                {
+                    await _dialogService.DisplayAlertAsync("Empty stages",
+                        "Sorry, but you not created any stage yet.", "Go Back");
+                    return Task.CompletedTask;
+                    //await NavigationService.GoBackAsync();
+                }
+
+                var firstStageTemplateId = _stageTemplates.First().Id;
+
+                await CreateStagesFromTemplate(_stageTemplates, Training.Id);
+                SetInitialCurrentStage();
+
+                var exerciseTemplate = await
+                    _exerciseTemplateRepository.GetByStageTemplateId(firstStageTemplateId);
+                var exercises = await CreateExercisesFromTemplate(exerciseTemplate, firstStageTemplateId);
+                var exerciseViewModel = CreateExerciseViewModelsFromExercises(exercises);
+                CreateGrouppedSetsFromExerciseViewModels(exerciseViewModel);
+
+                return Task.CompletedTask;
+            });
+        }
+
+        private async Task LoadActiveTraining(Training activeTraining, TrainingTemplate trainingTemplate)
+        {
+            Training = activeTraining;
+            var stages = await _stageRepository.GetByTrainingId(Training.Id);
+            _stageTemplates = await _stageTemplateRepository.GetStagesByTrainingTemplateId(trainingTemplate.Id);
+            SetInitialCurrentStage();
+            var exercises = await _exerciseRepository.GetByStageId(stages.First().Id);
+            var exerciseViewModel = CreateExerciseViewModelsFromExercises(exercises);
+            LoadGrouppedSetsFromExerciseViewModel(exerciseViewModel);
+        }
+
+        private void SetInitialCurrentStage()
+        {
+            CurrentStage = _stageTemplates.FirstOrDefault();
+            IndexOfCurrentStage = _stageTemplates.IndexOf(CurrentStage);
+        }
+
         private async Task<List<Exercise>> CreateExercisesFromTemplate(List<ExerciseTemplate> templates, int stageId)
         {
             var exercisesList = new List<Exercise>();
@@ -135,11 +166,33 @@ namespace GymTracker.ViewModels
             return exerciseViewModels;
         }
 
-        private void CreateGrouppedSetsFromExerciseViewModels(List<ExerciseViewModel> exerciseViewModels)
+        private async void CreateGrouppedSetsFromExerciseViewModels(List<ExerciseViewModel> exerciseViewModels)
         {
             foreach (var exerciseViewModel in exerciseViewModels)
             {
-                GrouppedSets.Add(new GrouppedSets(exerciseViewModel));
+                var grouppedSet = new GrouppedSets(exerciseViewModel);
+
+                for (int i = 0; i < exerciseViewModel.Sets; i++)
+                {
+                    var set = new Set(exerciseViewModel.ExerciseId, i);
+                    await _setRepository.SaveItemAsync(set);
+                    grouppedSet.Items.Add(new SetsViewModel(set));
+                }
+                GrouppedSets.Add(grouppedSet);
+            }
+        }
+
+        private async void LoadGrouppedSetsFromExerciseViewModel(List<ExerciseViewModel> exerciseViewModels)
+        {
+            foreach (var exerciseViewModel in exerciseViewModels)
+            {
+                var grouppedSet = new GrouppedSets(exerciseViewModel);
+                var sets = await _setRepository.GetSetsByExerciseId(exerciseViewModel.ExerciseId);
+                foreach (var set in sets)
+                {
+                    grouppedSet.Items.Add(new SetsViewModel(set));
+                }
+                GrouppedSets.Add(grouppedSet);
             }
         }
 
@@ -162,7 +215,7 @@ namespace GymTracker.ViewModels
         private async Task GoToNextStage()
         {
             var lastIndex = _stages.Count - 1;
-            var nextIndex = Index + 1;
+            var nextIndex = IndexOfCurrentStage + 1;
 
             if (nextIndex <= lastIndex)
                 await SwapStages(nextIndex);
@@ -170,7 +223,7 @@ namespace GymTracker.ViewModels
 
         private async Task GoToPreviousStage()
         {
-            var previousIndex = Index - 1;
+            var previousIndex = IndexOfCurrentStage - 1;
 
             if (previousIndex >= 0)
                 await SwapStages(previousIndex);
@@ -185,7 +238,7 @@ namespace GymTracker.ViewModels
             var exercise = await CreateExercisesFromTemplate(exerciseTemplates, CurrentStage.Id);
             var exerciseViewModels = CreateExerciseViewModelsFromExercises(exercise);
             CreateGrouppedSetsFromExerciseViewModels(exerciseViewModels);
-            Index = index;
+            IndexOfCurrentStage = index;
         }
     }
 }
