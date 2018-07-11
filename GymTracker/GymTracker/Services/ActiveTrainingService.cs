@@ -11,7 +11,6 @@ namespace GymTracker.Services
 {
     public interface IActiveTrainingService
     {
-        Task<List<Stage>> CreateStagesFromTemplate(List<StageTemplate> templates, int trainingId);
         Task<List<StageTemplate>> LoadStageTemplates(int trainingTemplateId);
         Task<ObservableCollection<GrouppedSets>> GetGrouppedSetFromStage(int stageId, bool isNew);
     }
@@ -51,19 +50,6 @@ namespace GymTracker.Services
                 throw new Exception("There is no stages in this training");
 
             return stageTemplate;
-        }
-
-        public async Task<List<Stage>> CreateStagesFromTemplate(List<StageTemplate> templates, int trainingId)
-        {
-            var stagesList = new List<Stage>();
-            foreach (var template in templates)
-            {
-                var stage = new Stage(template, trainingId);
-                await _stageRepository.SaveItemAsync(stage);
-                stagesList.Add(stage);
-            }
-
-            return stagesList;
         }
 
         public async Task<ObservableCollection<GrouppedSets>> GetGrouppedSetFromStage(int stageId, bool isNew)

@@ -27,7 +27,6 @@ namespace GymTracker.ViewModels
         private readonly IPageDialogService _dialogService;
         public DelegateCommand GoToNextStageCommand { get; set; }
         public DelegateCommand GoToPreviousStageCommand { get; set; }
-        private List<Stage> _stages;
         private List<StageTemplate> _stageTemplates;
 
         public ActiveTrainingViewModel(INavigationService navigationService, 
@@ -49,7 +48,6 @@ namespace GymTracker.ViewModels
             _setRepository = setRepository;
             _activeTrainingService = activeTrainingService;
             _dialogService = dialogService;
-            _stages = new List<Stage>();
             GoToNextStageCommand = new DelegateCommand(async()=>await GoToNextStage());
             GoToPreviousStageCommand = new DelegateCommand(async()=>await GoToPreviousStage());
             GrouppedSets = new ObservableCollection<GrouppedSets>();
@@ -87,37 +85,25 @@ namespace GymTracker.ViewModels
         {
             if (parameters.ContainsKey(Constants.Models.Training))
             {
+                var isNew = true;
                 var trainingTemplate = parameters.GetValue<TrainingTemplate>(Constants.Models.Training);
 
                 var activeTraining = await _trainingRepository.GetActiveTrainingByTemplateId(trainingTemplate.Id);
                 if (activeTraining == null)
-                    await CreateNewTraining(trainingTemplate);
+                {
+                    await CreateTrainingFromTemplate(trainingTemplate);
+                }
                 else
                 {
-                    await LoadActiveTraining(activeTraining, trainingTemplate);
+                    Training = activeTraining;
+                    isNew = false;
                 }
+                _stageTemplates = await _activeTrainingService.LoadStageTemplates(trainingTemplate.Id);
+                SetInitialCurrentStage();
+                var firstStageTemplateId = _stageTemplates.First().Id;
+                Device.BeginInvokeOnMainThread(async () => 
+                    GrouppedSets = await _activeTrainingService.GetGrouppedSetFromStage(firstStageTemplateId, isNew));
             }
-        }
-
-        private async Task CreateNewTraining(TrainingTemplate trainingTemplate)
-        {
-            await CreateTrainingFromTemplate(trainingTemplate);
-            _stageTemplates = await _activeTrainingService.LoadStageTemplates(trainingTemplate.Id);
-            _stages = await _activeTrainingService.CreateStagesFromTemplate(_stageTemplates, Training.Id);
-            SetInitialCurrentStage();
-
-            var firstStageTemplateId = _stageTemplates.First().Id;
-            Device.BeginInvokeOnMainThread(async () => GrouppedSets = await _activeTrainingService.GetGrouppedSetFromStage(firstStageTemplateId, false));
-        }
-
-        private async Task LoadActiveTraining(Training activeTraining, TrainingTemplate trainingTemplate)
-        {
-            Training = activeTraining;
-            _stageTemplates = await _activeTrainingService.LoadStageTemplates(trainingTemplate.Id);
-            SetInitialCurrentStage();
-
-            var firstStageTemplateId = _stageTemplates.First().Id;
-            Device.BeginInvokeOnMainThread(async () => GrouppedSets = await _activeTrainingService.GetGrouppedSetFromStage(firstStageTemplateId, false));
         }
 
         private void SetInitialCurrentStage()
@@ -134,7 +120,7 @@ namespace GymTracker.ViewModels
 
         private async Task GoToNextStage()
         {
-            var lastIndex = _stages.Count - 1;
+            var lastIndex = _stageTemplates.Count - 1;
             var nextIndex = IndexOfCurrentStage + 1;
 
             if (nextIndex <= lastIndex)
