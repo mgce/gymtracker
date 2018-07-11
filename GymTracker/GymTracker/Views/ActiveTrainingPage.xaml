@@ -38,6 +38,22 @@
                 ItemsSource="{Binding GrouppedSets}"
                 GroupDisplayBinding="{Binding ExerciseViewModel.Name}"
                 IsGroupingEnabled="True">
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="#"/>
+                            <Label Grid.Column="1" Text="Previous"/>
+                            <Label Grid.Column="2" Text="Reps"/>
+                            <Label Grid.Column="3" Text="Done"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -48,10 +64,10 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Text="#"/>
-                                <Label Text="Previous"/>
-                                <Label Text="Reps"/>
-                                <Label Text="Done"/>
+                                <Label Grid.Column="0" Text="{Binding Order}"/>
+                                <Label Grid.Column="1" Text="{Binding Previous}"/>
+                                <Label Grid.Column="2" Text="{Binding Repetitions}"/>
+                                <Label Grid.Column="3" Text="x"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
