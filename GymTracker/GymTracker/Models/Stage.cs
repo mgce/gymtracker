@@ -14,17 +14,19 @@ namespace GymTracker.Models
         [Ignore]
         public List<Exercise> Exercises { get; set; }
         public int TrainingId { get; set; }
+        public int Order { get; set; }
 
         public Stage()
         {
             
         }
 
-        public Stage(StageTemplate template, int trainingId)
+        public Stage(StageTemplate template, int trainingId, int order)
         {
             StageTemplateId = template.Id;
             TrainingId = trainingId;
             Template = template;
+            Order = order;
         }
     }
 }

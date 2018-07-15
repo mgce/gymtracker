@@ -13,15 +13,15 @@ namespace GymTracker.Models
         public ExerciseTemplate Template { get; set; }
         [Ignore]
         public List<Set> Sets { get; set; }
-        public int StageId { get; set; }
+        public int StageTempalateId { get; set; }
 
         public Exercise()
         {
             
         }
-        public Exercise(ExerciseTemplate tempalate, int stageId)
+        public Exercise(ExerciseTemplate tempalate, int stageTemplateId)
         {
-            StageId = stageId;
+            StageTempalateId = stageTemplateId;
             Sets = new List<Set>();
             Template = tempalate;
             ExerciseTemplateId = tempalate.Id;

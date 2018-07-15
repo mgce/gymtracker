@@ -9,7 +9,8 @@ namespace GymTracker.Repositories
 {
     public interface IExerciseRepository : IDatabase<Exercise>
     {
-        Task<List<Exercise>> GetByStageId(int stageId);
+        Task<List<Exercise>> GetByStageTemplateId(int stageId);
+        Task<List<Exercise>> GetLastExercisesByStageId(int stageId);
     }
 
     public class ExerciseRepository : Database<Exercise>, IExerciseRepository
@@ -19,9 +20,14 @@ namespace GymTracker.Repositories
         {
         }
 
-        public Task<List<Exercise>> GetByStageId(int stageId)
+        public Task<List<Exercise>> GetByStageTemplateId(int stageTempalateId)
         {
-            return _database.Table<Exercise>().Where(x => x.StageId == stageId).ToListAsync();
+            return _database.Table<Exercise>().Where(x => x.StageTempalateId == stageTempalateId).ToListAsync();
+        }
+
+        public Task<List<Exercise>> GetLastExercisesByStageId(int stageId)
+        {
+            return _database.QueryAsync<Exercise>("SELECT * FROM Exercise ");
         }
     }
 }

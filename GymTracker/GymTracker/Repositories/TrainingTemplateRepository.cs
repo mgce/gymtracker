@@ -10,9 +10,9 @@ namespace GymTracker.Repositories
     {
 
     }
-    public class TrainingTemplateTemplateRepository : Database<TrainingTemplate>, ITrainingTemplateRepository
+    public class TrainingTemplateRepository : Database<TrainingTemplate>, ITrainingTemplateRepository
     {
-        public TrainingTemplateTemplateRepository(IFileHelper fileHelper) 
+        public TrainingTemplateRepository(IFileHelper fileHelper) 
             : base(fileHelper)
         {
         }

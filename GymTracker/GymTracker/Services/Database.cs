@@ -24,11 +24,17 @@ namespace GymTracker.Services
 
         public Database(IFileHelper fileHelper)
         {
-            var dbPath = fileHelper.GetLocalFilePath("GymTracker2.db3");
+            var dbPath = fileHelper.GetLocalFilePath("GymTracker6.db3");
             _database = new SQLiteAsyncConnection(dbPath);
             Task.Run((() =>
             {
+                //_database.DropTableAsync<TrainingTemplate>();
+                //_database.DropTableAsync<StageTemplate>();
+                //_database.DropTableAsync<ExerciseTemplate>();
                 //_database.DropTableAsync<Training>();
+                //_database.DropTableAsync<Stage>();
+                //_database.DropTableAsync<Exercise>();
+                //_database.DropTableAsync<Set>();
                 _database.CreateTableAsync<TrainingTemplate>();
                 _database.CreateTableAsync<StageTemplate>();
                 _database.CreateTableAsync<ExerciseTemplate>();
@@ -111,6 +117,7 @@ namespace GymTracker.Services
         {
             if (item.Id != 0)
             {
+                item.UpdateDateModified();
                 return _database.UpdateAsync(item);
             }
             else

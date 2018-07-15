@@ -10,6 +10,7 @@ namespace GymTracker.Repositories
     public interface ITrainingRepository : IDatabase<Training>
     {
         Task<Training> GetActiveTrainingByTemplateId(int templateId);
+        Task<Training> GetTrainingByTemplateId(int templateId);
     }
 
     public class TrainingRepository : Database<Training>, ITrainingRepository
@@ -21,6 +22,13 @@ namespace GymTracker.Repositories
         public Task<Training> GetActiveTrainingByTemplateId(int templateId)
         {
             return _database.Table<Training>().Where(t => t.TrainingTemplateId == templateId && t.Active)
+                .FirstOrDefaultAsync();
+        }
+
+        public Task<Training> GetTrainingByTemplateId(int templateId)
+        {
+            return _database.Table<Training>().Where(t => t.TrainingTemplateId == templateId && !t.Active)
+                .OrderByDescending(t=>t.DateCreated)
                 .FirstOrDefaultAsync();
         }
     }

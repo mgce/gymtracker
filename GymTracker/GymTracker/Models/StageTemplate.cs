@@ -13,16 +13,17 @@ namespace GymTracker.Models
         public string ExercisesAsJson { get; set; }
         [Ignore]
         public List<ExerciseTemplate> Exercises { get; set; }
-
+        public int Order { get; set; }
         public StageTemplate()
         {
             
         }
 
-        public StageTemplate(string name, int trainingTemplateId)
+        public StageTemplate(string name, int trainingTemplateId, int order)
         {
             Name = name;
             TrainingTemplateId = trainingTemplateId;
+            Order = order;
         }
     }
 }

@@ -12,9 +12,9 @@ namespace GymTracker.Repositories
         Task<List<StageTemplate>> GetStagesByTrainingTemplateId(int trainingId);
     }
 
-    public class StageTemplateTemplateRepository : Database<StageTemplate>, IStageTemplateRepository
+    public class StageTemplateRepository : Database<StageTemplate>, IStageTemplateRepository
     {
-        public StageTemplateTemplateRepository(IFileHelper fileHelper) 
+        public StageTemplateRepository(IFileHelper fileHelper) 
             : base(fileHelper)
         {
         }

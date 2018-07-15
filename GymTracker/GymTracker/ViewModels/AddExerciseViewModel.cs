@@ -34,11 +34,24 @@ namespace GymTracker.ViewModels
         }
 
         private int? _sets;
-
-        public int? Sets
+        public string Sets
         {
-            get => _sets;
-            set => SetProperty(ref _sets, value);
+            get => _sets.ToString();
+            set
+            {
+                try
+                {
+                    _sets = int.Parse(value);
+                    var setsAsString = _sets.ToString();
+                    SetProperty(ref setsAsString, value);
+                }
+                catch
+                {
+                    string setsAsString = null;
+                    SetProperty(ref setsAsString, value);
+                }
+
+            }
         }
 
         private bool _useTimer;
@@ -50,31 +63,71 @@ namespace GymTracker.ViewModels
         }
 
         private int? _repetitions;
-
-        public int? Repetitions
+        public string Repetitions
         {
-            get => _repetitions;
-            set => SetProperty(ref _repetitions, value);
+            get => _repetitions.ToString();
+            set
+            {
+                try
+                {
+                    _repetitions = int.Parse(value);
+                    var repetitionsAsString = _repetitions.ToString();
+                    SetProperty(ref repetitionsAsString, value);
+                }
+                catch
+                {
+                    string repetitionsAsString = null;
+                    SetProperty(ref repetitionsAsString, value);
+                }
+
+            }
         }
 
         private int? _minTime;
+        public string MinTime
+        {
+            get => _minTime.ToString();
+            set
+            {
+                try
+                {
+                    _minTime = int.Parse(value);
+                    var minTimeAsString = _minTime.ToString();
+                    SetProperty(ref minTimeAsString, value);
+                }
+                catch
+                {
+                    string minTimeAsString = null;
+                    SetProperty(ref minTimeAsString, value);
+                }
 
-        public int? MinTime {
-            get => _minTime;
-            set => SetProperty(ref _minTime, value);
+            }
         }
 
         private int? _maxTime;
-
-        public int? MaxTime
+        public string MaxTime
         {
-            get => _maxTime;
-            set => SetProperty(ref _maxTime, value);
+            get => _maxTime.ToString();
+            set
+            {
+                try
+                {
+                    _maxTime = int.Parse(value);
+                    var maxTimeAsString = _maxTime.ToString();
+                    SetProperty(ref maxTimeAsString, value);
+                }
+                catch
+                {
+                    string maxTimeAsString = null;
+                    SetProperty(ref maxTimeAsString, value);
+                }
+                
+            }
         }
 
         private async Task AddExercise()
         {
-            var exercise = new ExerciseTemplate(Name, Repetitions, Sets.Value, UseTimer, MinTime, MaxTime, _stageId);
+            var exercise = new ExerciseTemplate(Name, _repetitions, _sets.Value, UseTimer, _minTime, _maxTime, _stageId);
             await _exerciseTemplateRepository.SaveItemAsync(exercise);
             var navigationParams = new NavigationParameters
             {

@@ -10,7 +10,6 @@ namespace GymTracker.Models
     {
         
         public int TrainingTemplateId { get; set; }
-        public DateTime DateCreated { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public long DurationInTicks { get; set; }
@@ -29,7 +28,6 @@ namespace GymTracker.Models
         {
             Template = template;
             TrainingTemplateId = template.Id;
-            DateCreated = DateTime.Now;
         }
 
         public void StartTraining()

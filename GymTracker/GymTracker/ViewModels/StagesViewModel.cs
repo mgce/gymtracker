@@ -62,7 +62,7 @@ namespace GymTracker.ViewModels
         {
             if (!string.IsNullOrEmpty(NewStageName))
             {
-                var stage = new StageTemplate(NewStageName, Training.Id);
+                var stage = new StageTemplate(NewStageName, Training.Id, _stages.Count);
                 await _stageTemplateRepository.SaveItemAsync(stage);
                 Stages.Add(stage);
                 AddingFormVisible = false;

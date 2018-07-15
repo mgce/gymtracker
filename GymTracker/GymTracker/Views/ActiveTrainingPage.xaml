@@ -23,7 +23,7 @@
                             <TapGestureRecognizer Command="{Binding GoToPreviousStageCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
-                    <Label Grid.Column="1" Text="{Binding CurrentStage.Name}" HorizontalOptions="Center"/>
+                    <Label Grid.Column="1" Text="{Binding CurrentStageTemplate.Name}" HorizontalOptions="Center"/>
                     <Label Grid.Column="2" Text="Next" HorizontalOptions="End">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding GoToNextStageCommand}"/>
@@ -36,22 +36,27 @@
                 HorizontalOptions="FillAndExpand"
                 Grid.Row="1"
                 ItemsSource="{Binding GrouppedSets}"
-                GroupDisplayBinding="{Binding ExerciseViewModel.Name}"
                 IsGroupingEnabled="True">
                 <ListView.GroupHeaderTemplate>
                     <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="#"/>
-                            <Label Grid.Column="1" Text="Previous"/>
-                            <Label Grid.Column="2" Text="Reps"/>
-                            <Label Grid.Column="3" Text="Done"/>
-                        </Grid>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical">
+                                <Label Text="{Binding ExerciseViewModel.Name}"/>
+                                <Grid Margin="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Label Grid.Column="0" Text="#"/>
+                                    <Label Grid.Column="1" Text="Previous"/>
+                                    <Label Grid.Column="2" Text="Repetitions"/>
+                                    <Label Grid.Column="3" Text="Done"/>
+                                </Grid>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.GroupHeaderTemplate>
                 <ListView.ItemTemplate>
@@ -65,9 +70,14 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Text="{Binding Order}"/>
+                                <Label Grid.Column="0" Text="{Binding Name}"/>
                                 <Label Grid.Column="1" Text="{Binding Previous}"/>
                                 <Label Grid.Column="2" Text="{Binding Repetitions}"/>
-                                <Label Grid.Column="3" Text="x"/>
+                                <Label Grid.Column="3" Text="x">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetDoneCommand}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

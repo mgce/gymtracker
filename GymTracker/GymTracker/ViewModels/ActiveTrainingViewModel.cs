@@ -17,36 +17,24 @@ namespace GymTracker.ViewModels
 {
     public class ActiveTrainingViewModel : ViewModelBase
     {
-        private readonly IStageTemplateRepository _stageTemplateRepository;
-        private readonly IExerciseTemplateRepository _exerciseTemplateRepository;
         private readonly ITrainingRepository _trainingRepository;
-        private readonly IStageRepository _stageRepository;
-        private readonly IExerciseRepository _exerciseRepository;
-        private readonly ISetRepository _setRepository;
         private readonly IActiveTrainingService _activeTrainingService;
+        private readonly IExerciseRepository _exerciseRepository;
         private readonly IPageDialogService _dialogService;
         public DelegateCommand GoToNextStageCommand { get; set; }
         public DelegateCommand GoToPreviousStageCommand { get; set; }
         private List<StageTemplate> _stageTemplates;
 
         public ActiveTrainingViewModel(INavigationService navigationService, 
-            IStageTemplateRepository stageTemplateRepository, 
-            IExerciseTemplateRepository exerciseTemplateRepository, 
             ITrainingRepository trainingRepository,
-            IStageRepository stageRepository,
-            IExerciseRepository exerciseRepository,
-            ISetRepository setRepository,
             IActiveTrainingService activeTrainingService,
+            IExerciseRepository exerciseRepository,
             IPageDialogService dialogService) 
             : base(navigationService)
         {
-            _stageTemplateRepository = stageTemplateRepository;
-            _exerciseTemplateRepository = exerciseTemplateRepository;
             _trainingRepository = trainingRepository;
-            _stageRepository = stageRepository;
-            _exerciseRepository = exerciseRepository;
-            _setRepository = setRepository;
             _activeTrainingService = activeTrainingService;
+            _exerciseRepository = exerciseRepository;
             _dialogService = dialogService;
             GoToNextStageCommand = new DelegateCommand(async()=>await GoToNextStage());
             GoToPreviousStageCommand = new DelegateCommand(async()=>await GoToPreviousStage());
@@ -60,11 +48,11 @@ namespace GymTracker.ViewModels
             set => SetProperty(ref _grouppedSets, value);
         }
 
-        private StageTemplate _currentStage;
-        public StageTemplate CurrentStage
+        private StageTemplate _currentStageTemplate;
+        public StageTemplate CurrentStageTemplate
         {
-            get => _currentStage;
-            set => SetProperty(ref _currentStage, value);
+            get => _currentStageTemplate;
+            set => SetProperty(ref _currentStageTemplate, value);
         }
 
         private int _indexOfCurrentStage;
@@ -98,6 +86,7 @@ namespace GymTracker.ViewModels
                     Training = activeTraining;
                     isNew = false;
                 }
+                //TODO ADD TRY-CATCH TO HANDLE EXCEPTION IN THIS METHOD BELOW
                 _stageTemplates = await _activeTrainingService.LoadStageTemplates(trainingTemplate.Id);
                 SetInitialCurrentStage();
                 var firstStageTemplateId = _stageTemplates.First().Id;
@@ -108,13 +97,14 @@ namespace GymTracker.ViewModels
 
         private void SetInitialCurrentStage()
         {
-            CurrentStage = _stageTemplates.FirstOrDefault();
-            IndexOfCurrentStage = _stageTemplates.IndexOf(CurrentStage);
+            CurrentStageTemplate = _stageTemplates.FirstOrDefault();
+            IndexOfCurrentStage = _stageTemplates.IndexOf(CurrentStageTemplate);
         }
 
         private async Task CreateTrainingFromTemplate(TrainingTemplate template)
         {
             Training = new Training(template);
+            Training.StartTraining();
             await _trainingRepository.SaveItemAsync(Training);
         }
 
@@ -137,10 +127,13 @@ namespace GymTracker.ViewModels
 
         private async Task SwapStages(int index)
         {
-            CurrentStage = _stageTemplates[index];
+            CurrentStageTemplate = _stageTemplates[index];
             GrouppedSets = new ObservableCollection<GrouppedSets>();
 
-            Device.BeginInvokeOnMainThread(async () => GrouppedSets = await _activeTrainingService.GetGrouppedSetFromStage(CurrentStage.Id, false));
+            var exercises = await _exerciseRepository.GetByStageTemplateId(CurrentStageTemplate.Id);
+            var isNew = !exercises.Any();
+
+            Device.BeginInvokeOnMainThread(async () => GrouppedSets = await _activeTrainingService.GetGrouppedSetFromStage(CurrentStageTemplate.Id, isNew));
             IndexOfCurrentStage = index;
         }
     }
